@@ -1,20 +1,20 @@
 version: '3.4'
 services:
   db:
-    image: postgres:12.9-alpine
+    image: postgres
     environment:
-      POSTGRES_PASSWORD: "123456"
-    
-
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+      POSTGRES_DB: docker_test
+    volumes:
+      - ./tmp/db:/var/lib/postgres/data
+      # - postgres-data:/var/lib/postgresql/data
   web:
     build: .
-    command: bash -c "rails s -p 3000 -b '0.0.0.0'"
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
     volumes:
       - .:/Rails-Docker
     ports:
       - "3000:3000"
     depends_on:
       - db
-
-volumes:
-  postgres:
